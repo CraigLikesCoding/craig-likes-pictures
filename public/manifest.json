@@ -1,0 +1,13 @@
+{
+  "name": "Craig Likes Pictures",
+  "short_name": "CLP",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ]
+}

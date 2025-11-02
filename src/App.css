@@ -1,0 +1,162 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.btn-dark:hover {
+  background-color: rgba(0.5,0.5,0.5,0.75) !important; /* slightly darker on hover */
+}
+
+.btn {
+  transition: opacity 1s ease;
+  opacity: 1;
+}
+
+.btn.fade-out {
+  opacity: 0;
+}
+
+/* Base (light) theme */
+body {
+  background-color: #ffffff;
+  color: #212529;
+}
+
+/* Dark theme overrides */
+body.dark-mode {
+  background-color: #121212;
+  color: #f1f1f1;
+}
+
+/* Album-specific dark-mode tweaks */
+body.dark-mode .modal-content {
+  background-color: #222;
+  color: #f1f1f1;
+}
+
+body.dark-mode .btn-dark {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  color: #f1f1f1 !important;
+}
+
+body.dark-mode .btn-dark:hover {
+  background-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Optional: adjust album titles/descriptions if needed */
+body.dark-mode h1,
+body.dark-mode p,
+body.dark-mode .text-muted {
+  color: #e2e2e2 !important;
+}
+
+/* Dark mode override */
+body.dark-mode .description-modal .modal-content {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+}
+
+body.dark-mode .btn-dark {
+  background-color: rgba(0, 0, 0, 0.6) !important; /* darker fill */
+  border: none !important;
+  color: white !important;
+}
+
+body.dark-mode .btn-dark:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+body.dark-mode h5.text-white {
+  text-shadow:
+  -2px -2px 2px black,
+  2px -2px 2px black,
+  -2px 2px 2px black,
+  2px 2px 2px black;
+}
+
+.card-overlay {
+  background: rgba(0, 0, 0, 0.4); /* brighter by default */
+  transition: background 0.3s, backdrop-filter 0.3s;
+}
+
+.card:hover .card-overlay {
+  background: rgba(0, 0, 0, 0.7); /* darken on hover */
+  backdrop-filter: blur(3px); /* subtle blur on hover */
+}
+
+.text-shadow {
+  text-shadow:
+    -2px -2px 3px black,
+     2px -2px 3px black,
+    -2px  2px 3px black,
+     2px  2px 3px black;
+}
+
+/* default / light mode */
+.menu-toggle {
+  color: var(--bs-body-color);
+}
+
+/* dark mode override */
+body.dark .menu-toggle {
+  color: #f8f9fa; /* lighter color for dark backgrounds */
+}
+
+
+.menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0);  /* start transparent */
+  backdrop-filter: blur(0px);
+  opacity: 0;                     /* start invisible */
+  pointer-events: none;
+  transition: background 0.5s ease, backdrop-filter 0.5s ease, opacity 0.5s ease;
+}
+
+.menu-backdrop.open {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  opacity: 1;
+  pointer-events: auto;
+}
