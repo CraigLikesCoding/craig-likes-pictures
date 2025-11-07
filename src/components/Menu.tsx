@@ -2,10 +2,19 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import useYearListJson from "../hooks/useYearListJson";
 import { useEffect } from "react";
+import usePhotosIndexJson from "../hooks/usePhotosIndexJson";
+import Search from "./Search";
 
 const Menu = () => {
   const { yearListData, error, isLoading } = useYearListJson();
   const [isOpen, setIsOpen] = useState(false);
+  const {
+    photosData,
+    isLoading: isSearchLoading,
+    error: searchError,
+    loadPhotosIndex,
+  } = usePhotosIndexJson();
+  const [showSearchModal, setShowSearchModal] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -15,10 +24,16 @@ const Menu = () => {
     }
   }, [isOpen]);
 
-  if (isLoading) {
+  if (isLoading || isSearchLoading) {
     return <div className="spinner-border"></div>;
   }
   if (error) return <p>Error: {error}</p>;
+  if (searchError) return <p>Error: {searchError}</p>;
+
+  const handleSearchClick = async () => {
+    await loadPhotosIndex(); // load JSON if not already loaded
+    setShowSearchModal(true); // open search modal
+  };
 
   return (
     <>
@@ -57,24 +72,38 @@ const Menu = () => {
           overflow: "hidden", // contain scroll area visually
         }}
       >
-        {/* Close button inside menu */}
-        <button
-          onClick={() => setIsOpen(false)}
-          className="btn btn-link text-white position-absolute"
-          style={{
-            top: "0px",
-            right: "5px",
-            fontSize: "1.5rem",
-            zIndex: 1051,
-          }}
-          aria-label="Close menu"
+        {/* Header row: title + magnifier + close button */}
+        <div
+          className="d-flex align-items-center justify-content-between border-bottom border-secondary pb-2 mt-1 mb-3"
+          style={{ minHeight: "40px" }}
         >
-          <i className="bi bi-x-lg"></i>
-        </button>
+          <h5 className="m-0">Choose a Year:</h5>
 
-        <h5 className="border-bottom border-secondary pb-2 mb-3 mt-4">
-          Choose a Year:
-        </h5>
+          <div className="d-flex align-items-center gap-3">
+            {/* Magnifier button */}
+            <button
+              className="btn btn-link text-white p-0"
+              style={{ fontSize: "1.3rem" }}
+              onClick={() => {
+                setIsOpen(false);
+                handleSearchClick();
+              }}
+              aria-label="Search all photos"
+            >
+              <i className="bi bi-search"></i>
+            </button>
+
+            {/* Close button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="btn btn-link text-white p-0"
+              style={{ fontSize: "1.5rem" }}
+              aria-label="Close menu"
+            >
+              <i className="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </div>
 
         {/* Scrollable section */}
         <div
@@ -106,6 +135,15 @@ const Menu = () => {
           className="position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50"
           style={{ zIndex: 1049 }}
           onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {showSearchModal && (
+        <Search
+          photosData={photosData}
+          isLoading={isLoading}
+          error={error}
+          onClose={() => setShowSearchModal(false)}
         />
       )}
     </>

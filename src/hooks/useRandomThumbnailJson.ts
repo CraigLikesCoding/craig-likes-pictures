@@ -4,18 +4,18 @@ import type { AlbumJson } from "../services/AlbumJson";
 
 const useRandomThumbnailJson = (albumList: AlbumListJson[]) => {
   const [errorThumb, setErrorThumb] = useState("");
-
   const [isLoadingThumb, setLoadingThumb] = useState(false);
-
   const [randomThumbnailList, setRandomThumbnailList] =
     useState<Record<string, string>>();
 
   async function getRandomThumbnails(
-    albums: AlbumListJson[]
+    albums: AlbumListJson[],
+    version: string
   ): Promise<Record<string, string>> {
     const results = await Promise.all(
       albums.map(async (album) => {
-        const res = await fetch(`/json/${album.albumJson}?v=1`);
+        const res = await fetch(`/json/${album.albumJson}?v=${version}`);
+        if (!res.ok) throw new Error(`Failed to fetch ${album.albumJson}`);
         const data: AlbumJson = await res.json();
         const randomImage =
           data.images[Math.floor(Math.random() * data.images.length)];
@@ -38,18 +38,45 @@ const useRandomThumbnailJson = (albumList: AlbumListJson[]) => {
   useEffect(() => {
     if (!albumList || albumList.length === 0) return;
 
-    setLoadingThumb(true);
-    setErrorThumb("");
+    const fetchThumbnails = async () => {
+      setLoadingThumb(true);
+      setErrorThumb("");
 
-    getRandomThumbnails(albumList)
-      .then((result) => {
+      // default version
+      let albumsIndividualVersion = "1";
+
+      try {
+        const versionRes = await fetch("/json/version.json");
+        if (versionRes.ok) {
+          const versionData = await versionRes.json();
+          albumsIndividualVersion = versionData.albums_individual ?? "1";
+        } else {
+          console.warn(
+            "version.json not found, using v=1 for individual album JSONs"
+          );
+        }
+      } catch (err: any) {
+        console.warn(
+          "Error loading version.json, using v=1 for individual album JSONs",
+          err?.message ?? err
+        );
+      }
+
+      try {
+        const result = await getRandomThumbnails(
+          albumList,
+          albumsIndividualVersion
+        );
         setRandomThumbnailList(result);
-      })
-      .catch((err) => {
+      } catch (err: any) {
         console.error(err);
-        setErrorThumb(err.message);
-      })
-      .finally(() => setLoadingThumb(false));
+        setErrorThumb(err?.message ?? String(err));
+      } finally {
+        setLoadingThumb(false);
+      }
+    };
+
+    fetchThumbnails();
   }, [albumList]);
 
   return { randomThumbnailList, errorThumb, isLoadingThumb };

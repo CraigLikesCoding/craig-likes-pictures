@@ -1,3 +1,5 @@
+/* Start of Base styles (Vite/React defaults) */
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -41,9 +43,14 @@
   color: #888;
 }
 
+/* End of Base styles (Vite/React defaults) */
+
+/* Start of Buttons and hover fades */
+
 .btn-dark:hover {
-  background-color: rgba(0.5,0.5,0.5,0.75) !important; /* slightly darker on hover */
+  background-color: rgba(128,128,128,0.75) !important;
 }
+
 
 .btn {
   transition: opacity 1s ease;
@@ -53,6 +60,10 @@
 .btn.fade-out {
   opacity: 0;
 }
+
+/* End of Buttons and hover fades */
+
+/* Start of Global light/dark theme */
 
 /* Base (light) theme */
 body {
@@ -66,34 +77,16 @@ body.dark-mode {
   color: #f1f1f1;
 }
 
-/* Album-specific dark-mode tweaks */
+/* End of Global light/dark theme */
+
+/* Start of Dark-mode overrides (modal, button, text) */
+/* AlbumViewer modals */
 body.dark-mode .modal-content {
   background-color: #222;
   color: #f1f1f1;
 }
 
-body.dark-mode .btn-dark {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  color: #f1f1f1 !important;
-}
-
-body.dark-mode .btn-dark:hover {
-  background-color: rgba(255, 255, 255, 0.35) !important;
-}
-
-/* Optional: adjust album titles/descriptions if needed */
-body.dark-mode h1,
-body.dark-mode p,
-body.dark-mode .text-muted {
-  color: #e2e2e2 !important;
-}
-
-/* Dark mode override */
-body.dark-mode .description-modal .modal-content {
-  background-color: #1e1e1e !important;
-  color: #f5f5f5 !important;
-}
-
+/* AlbumViewer buttons */
 body.dark-mode .btn-dark {
   background-color: rgba(0, 0, 0, 0.6) !important; /* darker fill */
   border: none !important;
@@ -104,22 +97,28 @@ body.dark-mode .btn-dark:hover {
   background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
+/* Optional: album titles / descriptions */
+body.dark-mode h1,
+body.dark-mode p,
+body.dark-mode .text-muted {
+  color: #e2e2e2 !important;
+}
+
+/* Description modal override */
+body.dark-mode .description-modal .modal-content {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+}
+
+/* End of Dark-mode overrides (modal, button, text) */
+
+/* Start of Text shadows */
 body.dark-mode h5.text-white {
   text-shadow:
   -2px -2px 2px black,
   2px -2px 2px black,
   -2px 2px 2px black,
   2px 2px 2px black;
-}
-
-.card-overlay {
-  background: rgba(0, 0, 0, 0.4); /* brighter by default */
-  transition: background 0.3s, backdrop-filter 0.3s;
-}
-
-.card:hover .card-overlay {
-  background: rgba(0, 0, 0, 0.7); /* darken on hover */
-  backdrop-filter: blur(3px); /* subtle blur on hover */
 }
 
 .text-shadow {
@@ -130,17 +129,9 @@ body.dark-mode h5.text-white {
      2px  2px 3px black;
 }
 
-/* default / light mode */
-.menu-toggle {
-  color: var(--bs-body-color);
-}
+/* End of Text shadows */
 
-/* dark mode override */
-body.dark .menu-toggle {
-  color: #f8f9fa; /* lighter color for dark backgrounds */
-}
-
-
+/* Start of Menu Backdrop */
 .menu-backdrop {
   position: fixed;
   top: 0;
@@ -160,3 +151,70 @@ body.dark .menu-toggle {
   opacity: 1;
   pointer-events: auto;
 }
+/* End of Menu Backdrop */
+
+/* Start of Hover Effects */
+.card-overlay {
+  background: rgba(0, 0, 0, 0.4); /* brighter by default */
+  transition: background 0.3s, backdrop-filter 0.3s;
+}
+
+.card:hover .card-overlay {
+  background: rgba(0, 0, 0, 0.7); /* darken on hover */
+  backdrop-filter: blur(3px); /* subtle blur on hover */
+}
+/* End of Hover Effects */
+
+/* Start of Menu Toggle Colors */
+/* default / light mode */
+.menu-toggle {
+  color: var(--bs-body-color);
+}
+/* End of Menu Toggle Colors */
+
+/* Start of Search Modal */
+.search-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.search-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  z-index: 1040;
+}
+
+.search-modal .modal-dialog { position: relative; z-index: 1050; }
+
+body.dark-mode .search-modal .modal-content {
+  background-color: #1e1e1e !important;
+  color: #f5f5f5 !important;
+}
+
+body.dark-mode .search-modal input.form-control {
+  background-color: #2a2a2a !important;
+  color: #f5f5f5 !important;
+  border: 1px solid #555 !important;
+}
+body.dark-mode .form-control::placeholder { color: #bbb !important; }
+
+/* Keep image modal transparent when opened from search */
+.search-modal.image-modal-open .modal-content.bg-transparent {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+/* End of Search Modal */

@@ -4,7 +4,7 @@ import Menu from "./Menu";
 import { useEffect, useState } from "react";
 import useYearListJson from "../hooks/useYearListJson";
 import useAlbumListJson from "../hooks/useAlbumListJson";
-import Toast from "./Toast";
+import { useToast } from "./ToastContext";
 
 export default function AlbumList() {
   const { year: yearParam } = useParams<{ year?: string }>();
@@ -21,9 +21,8 @@ export default function AlbumList() {
   const { randomThumbnailList, errorThumb, isLoadingThumb } =
     useRandomThumbnailJson(albumListData || []);
 
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-
   const [hasShownToast, setHasShownToast] = useState(false);
+  const { showToast } = useToast();
 
   const navigate = useNavigate();
 
@@ -39,8 +38,9 @@ export default function AlbumList() {
   useEffect(() => {
     if (error && !hasShownToast && yearListData?.length) {
       const invalidYear = yearParam; // raw URL input
-      setToastMessage(
-        `Invalid year: ${invalidYear}, redirecting to most recent year.`
+      showToast(
+        `Invalid year: ${invalidYear}, redirecting to most recent year.`,
+        "error"
       );
       setHasShownToast(true); // prevent further toast updates
 
@@ -60,7 +60,6 @@ export default function AlbumList() {
 
   return (
     <div className="container py-4">
-      {toastMessage && <Toast message={toastMessage} />}
       <Menu />
       <h2 className="text-center mb-4">Craig Likes Pictures – {year}</h2>
 
