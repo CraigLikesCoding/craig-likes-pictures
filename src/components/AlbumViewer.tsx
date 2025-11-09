@@ -49,7 +49,6 @@ export default function AlbumViewer() {
 
   // Navigate to previous/next image
   const showPrev = () => {
-    console.log("showPrev in AlbumViewer");
     if (!albumData || !albumData.images?.length) return;
 
     setCurrentIndex((i) => (i > 0 ? i - 1 : albumData.images.length - 1));
@@ -67,7 +66,6 @@ export default function AlbumViewer() {
   };
 
   const showNext = () => {
-    //if (albumData) console.log(!albumData.images?.length);
     if (!albumData || !albumData.images?.length) return;
 
     setCurrentIndex((i) => (i < albumData.images.length - 1 ? i + 1 : 0));

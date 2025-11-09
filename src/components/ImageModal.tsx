@@ -49,8 +49,8 @@ export default function ImageModal({
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     touchEndX = e.changedTouches[0].clientX;
-    if (touchEndX < touchStartX - 50) showNext; // swipe left
-    if (touchEndX > touchStartX + 50) showPrev; // swipe right
+    if (touchEndX < touchStartX - 50) showNext(); // swipe left
+    if (touchEndX > touchStartX + 50) showPrev(); // swipe right
   };
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export default function ImageModal({
       window.removeEventListener("mousemove", resetTimer);
       window.removeEventListener("touchstart", resetTimer);
     };
-  }, [isImageModalOpen]);
+  }, [isImageModalOpen, currentImg]);
 
   return (
     isImageModalOpen &&
@@ -84,8 +84,20 @@ export default function ImageModal({
       <div
         className="modal fade show d-block"
         tabIndex={-1}
-        style={{ backgroundColor: "rgba(0,0,0,0.8)" }}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: "rgba(0,0,0,0.8)",
+          zIndex: 1055,
+          pointerEvents: "auto",
+          touchAction: "none", // prevents background scroll
+        }}
         onClick={closeModal}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         <div
           className="modal-dialog modal-dialog-centered modal-xl"
@@ -101,10 +113,8 @@ export default function ImageModal({
                 maxWidth: "90vw",
                 maxHeight: "90vh",
                 overflow: "hidden",
-                touchAction: "pan-y",
+                //touchAction: "pan-y",
               }}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
             >
               <div className="position-relative d-inline-block">
                 <img
@@ -128,18 +138,6 @@ export default function ImageModal({
 
                 {/* Top-right controls */}
                 <div className="position-absolute top-0 end-0 d-flex gap-2 p-2">
-                  {/*This is for the share button, which I'm still thinking about how to actually pass the file alongs}
-                    <button
-                      className={`btn btn-sm btn-dark rounded-circle text-white ${
-                        !showControls ? "fade-out" : ""
-                      }`}
-                      style={{
-                        backgroundColor: "rgba(0,0,0,0.5)", // semi-transparent black
-                      }}
-                      onClick={handleShare}
-                    >
-                      <i className="bi bi-share"></i>
-                    </button>*/}
                   <button
                     className={`btn btn-sm btn-dark rounded-circle text-white ${
                       !areControlsVisible ? "fade-out" : ""
@@ -152,32 +150,33 @@ export default function ImageModal({
                     <i className="bi bi-x-lg"></i>
                   </button>
                 </div>
-
-                {/* Nav arrows */}
-                <button
-                  className={`btn btn-dark btn-sm rounded-circle text-white position-absolute top-50 start-0 translate-middle-y ${
-                    !areControlsVisible ? "fade-out" : ""
-                  }`}
-                  onClick={showPrev}
-                  style={{
-                    backgroundColor: "rgba(0,0,0,0.5)", // semi-transparent black
-                  }}
-                >
-                  <i className="bi bi-chevron-left fs-4"></i>
-                </button>
-
-                <button
-                  className={`btn btn-dark btn-sm rounded-circle text-white position-absolute top-50 end-0 translate-middle-y ${
-                    !areControlsVisible ? "fade-out" : ""
-                  }`}
-                  onClick={showNext}
-                  style={{
-                    backgroundColor: "rgba(0,0,0,0.5)", // semi-transparent black
-                  }}
-                >
-                  <i className="bi bi-chevron-right fs-4"></i>
-                </button>
               </div>
+              {/* Nav arrows */}
+              <button
+                className={`btn btn-dark btn-sm rounded-circle text-white position-fixed top-50 translate-middle-y ${
+                  !areControlsVisible ? "fade-out" : ""
+                }`}
+                onClick={showPrev}
+                style={{
+                  left: "25px",
+                  backgroundColor: "rgba(0,0,0,0.5)", // semi-transparent black
+                }}
+              >
+                <i className="bi bi-chevron-left fs-4"></i>
+              </button>
+
+              <button
+                className={`btn btn-dark btn-sm rounded-circle text-white position-fixed top-50 translate-middle-y ${
+                  !areControlsVisible ? "fade-out" : ""
+                }`}
+                onClick={showNext}
+                style={{
+                  right: "25px",
+                  backgroundColor: "rgba(0,0,0,0.5)", // semi-transparent black
+                }}
+              >
+                <i className="bi bi-chevron-right fs-4"></i>
+              </button>
             </div>
           </div>
         </div>
