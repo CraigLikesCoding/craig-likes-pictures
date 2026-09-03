@@ -29,6 +29,8 @@ export default function Search({
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
 
+  const PHOTO_BASE_URL = import.meta.env.VITE_PHOTO_BASE_URL;
+
   // useMemo caches filtered and sorted results for efficiency
   const filteredAndSortedResults = useMemo(() => {
     if (query.trim().length < 2) {
@@ -50,7 +52,7 @@ export default function Search({
 
     // Filter results where every search word is found in the photo name
     const matches = photosData.filter((item) =>
-      words.every((w) => item.photo.toLowerCase().includes(w))
+      words.every((w) => item.photo.toLowerCase().includes(w)),
     );
 
     const sortedResults = [...matches].sort((a, b) => {
@@ -108,7 +110,7 @@ export default function Search({
 
   const getFullImageUrl = (file: string) => {
     const item = displayedResults[currentIndex!];
-    return `/albums/${item.year}/${item.album}/img/${file}`;
+    return `${PHOTO_BASE_URL}/albums/${item.year}/${item.album}/img/${file}`;
   };
 
   const listenerAttached = useRef(false);
@@ -134,7 +136,7 @@ export default function Search({
     if (photosData) {
       showToast(
         "Ready to search " + photosData.length.toLocaleString() + " photos.",
-        "success"
+        "success",
       );
     }
   }, [photosData]);
@@ -218,10 +220,10 @@ export default function Search({
                         onClick={() => openModalAt(index)}
                       >
                         <img
-                          src={`/albums/${item.year}/${item.album}/img/thumb/${
+                          src={`${PHOTO_BASE_URL}/albums/${item.year}/${item.album}/img/thumb/${
                             item.photo.substring(
                               0,
-                              item.photo.lastIndexOf(".jpg")
+                              item.photo.lastIndexOf(".jpg"),
                             ) + "_small.jpg"
                           }`}
                           alt={item.photo}

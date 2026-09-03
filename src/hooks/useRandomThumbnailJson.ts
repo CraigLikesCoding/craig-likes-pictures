@@ -8,9 +8,11 @@ const useRandomThumbnailJson = (albumList: AlbumListJson[]) => {
   const [randomThumbnailList, setRandomThumbnailList] =
     useState<Record<string, string>>();
 
+  const PHOTO_BASE_URL = import.meta.env.VITE_PHOTO_BASE_URL;
+
   async function getRandomThumbnails(
     albums: AlbumListJson[],
-    version: string
+    version: string,
   ): Promise<Record<string, string>> {
     const results = await Promise.all(
       albums.map(async (album) => {
@@ -21,18 +23,21 @@ const useRandomThumbnailJson = (albumList: AlbumListJson[]) => {
           data.images[Math.floor(Math.random() * data.images.length)];
         return {
           folder: album.folder,
-          url: `/albums/${album.albumJson.replace(
+          url: `${PHOTO_BASE_URL}/albums/${album.albumJson.replace(
             ".json",
-            ""
+            "",
           )}/img/${randomImage}`,
         };
-      })
+      }),
     );
 
-    return results.reduce((acc, curr) => {
-      acc[curr.folder] = curr.url;
-      return acc;
-    }, {} as Record<string, string>);
+    return results.reduce(
+      (acc, curr) => {
+        acc[curr.folder] = curr.url;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
   }
 
   useEffect(() => {
@@ -52,20 +57,20 @@ const useRandomThumbnailJson = (albumList: AlbumListJson[]) => {
           albumsIndividualVersion = versionData.albums_individual ?? "1";
         } else {
           console.warn(
-            "version.json not found, using v=1 for individual album JSONs"
+            "version.json not found, using v=1 for individual album JSONs",
           );
         }
       } catch (err: any) {
         console.warn(
           "Error loading version.json, using v=1 for individual album JSONs",
-          err?.message ?? err
+          err?.message ?? err,
         );
       }
 
       try {
         const result = await getRandomThumbnails(
           albumList,
-          albumsIndividualVersion
+          albumsIndividualVersion,
         );
         setRandomThumbnailList(result);
       } catch (err: any) {

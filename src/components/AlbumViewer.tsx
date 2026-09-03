@@ -15,7 +15,7 @@ export default function AlbumViewer() {
 
   const { albumData, error, isLoading } = useAlbumViewerJson(
     year!,
-    albumFolder!
+    albumFolder!,
   );
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -30,6 +30,8 @@ export default function AlbumViewer() {
   const { showToast } = useToast();
 
   const navigate = useNavigate();
+
+  const PHOTO_BASE_URL = import.meta.env.VITE_PHOTO_BASE_URL;
 
   const handleThumbnailClick = (img: string, index: number) => {
     setCurrentImg(img);
@@ -55,13 +57,13 @@ export default function AlbumViewer() {
     setCurrentImg(
       albumData.images[
         (currentIndex - 1 + albumData.images.length) % albumData.images.length
-      ]
+      ],
     );
     navigate(
       `/album/${year}/${albumFolder}/${
         (currentIndex - 1 + albumData.images.length) % albumData.images.length
       }`,
-      { replace: true }
+      { replace: true },
     );
   };
 
@@ -70,13 +72,13 @@ export default function AlbumViewer() {
 
     setCurrentIndex((i) => (i < albumData.images.length - 1 ? i + 1 : 0));
     setCurrentImg(
-      albumData.images[(currentIndex + 1) % albumData.images.length]
+      albumData.images[(currentIndex + 1) % albumData.images.length],
     );
     navigate(
       `/album/${year}/${albumFolder}/${
         (currentIndex + 1) % albumData.images.length
       }`,
-      { replace: true }
+      { replace: true },
     );
   };
 
@@ -97,7 +99,7 @@ export default function AlbumViewer() {
         if (!hasShownToast) {
           showToast(
             `Invalid photo: ${index}, redirecting to the album page instead.`,
-            "error"
+            "error",
           );
           setHasShownToast(true); // prevent further toast updates
         }
@@ -125,14 +127,14 @@ export default function AlbumViewer() {
 
   // Helper to get the thumbnail path
   const getThumbUrl = (imgName: string) =>
-    `/albums/${year}/${albumFolder}/img/thumb/${imgName.replace(
+    `${PHOTO_BASE_URL}/albums/${year}/${albumFolder}/img/thumb/${imgName.replace(
       /\.[^.]+$/,
-      "_small.jpg"
+      "_small.jpg",
     )}`;
 
   // Full-size image path (for later modal)
   const getFullImageUrl = (imgName: string) =>
-    `/albums/${year}/${albumFolder}/img/${imgName}`;
+    `${PHOTO_BASE_URL}/albums/${year}/${albumFolder}/img/${imgName}`;
 
   /* This is for the share button, which I'm still thinking about how to actually pass the file alongs
   const handleShare = () => {
